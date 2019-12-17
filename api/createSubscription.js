@@ -23,7 +23,6 @@ function createSubscription(userData) {
     const creditCard = new ApiContracts.CreditCardType();
     creditCard.setExpirationDate(userData.cardExpDate);
     creditCard.setCardNumber(userData.cardNumber);
-    creditCard.setCardCode(userData.cardCode);
 
     const payment = new ApiContracts.PaymentType();
     payment.setCreditCard(creditCard);
@@ -73,6 +72,24 @@ function createSubscription(userData) {
         const apiResponse = ctrl.getResponse();
 
         const response = new ApiContracts.ARBCreateSubscriptionResponse(apiResponse);
+
+            console.log(JSON.stringify(response, null, 2));
+
+            if(response != null){
+                if(response.getMessages().getResultCode() == ApiContracts.MessageTypeEnum.OK){
+                    console.log('Subscription Id : ' + response.getSubscriptionId());
+                    console.log('Message Code : ' + response.getMessages().getMessage()[0].getCode());
+                    console.log('Message Text : ' + response.getMessages().getMessage()[0].getText());
+                }
+                else{
+                    console.log('Result Code: ' + response.getMessages().getResultCode());
+                    console.log('Error Code: ' + response.getMessages().getMessage()[0].getCode());
+                    console.log('Error message: ' + response.getMessages().getMessage()[0].getText());
+                }
+            }
+            else{
+                console.log('Null Response.');
+            }
 
         resolve(response);
       });
